@@ -10,7 +10,7 @@ namespace Demo.Upserts.Command
     {
         public Version GetVersionFor(int accountNumber)
         {
-            const string sql = "select Sequence from dbo.AccountSequences where AccountId = @accountNumber";
+            const string sql = "select Sequence from dbo.AccountSequences where AccountNumber = @accountNumber";
 
             using (var connection = new SqlConnection(ConnectionString))
             {
@@ -22,12 +22,12 @@ namespace Demo.Upserts.Command
         public Version Increment(int accountNumber)
         {
             const string sql = @"merge AccountSequences as target
-using (select @accountNumber) as source (AccountId)
-on (target.AccountId = source.AccountId)
+using (select @accountNumber) as source (AccountNumber)
+on (target.AccountNumber = source.AccountNumber)
 when matched then 
 	update set Sequence = target.Sequence + 1
 when not matched THEN   
-	insert (AccountId, Sequence) values (source.AccountId, 1)
+	insert (AccountNumber, Sequence) values (source.AccountNumber, 1)
 output inserted.Sequence;";
 
             using (var connection = new SqlConnection(ConnectionString))
@@ -41,11 +41,11 @@ output inserted.Sequence;";
             const string sql = @"if not exists (select * from sys.tables where name = 'AccountSequences')
 begin
 	create table [dbo].[AccountSequences](
-		[AccountId] [int] NOT NULL,
+		[AccountNumber] [int] NOT NULL,
 		[Sequence] [int] NULL,
 	primary key clustered 
 	(
-		[AccountId] ASC
+		[AccountNumber] ASC
 	) with (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 	) on [PRIMARY]
 end;
@@ -65,7 +65,7 @@ declare @counter int = 0
 
 while (@counter < @rowsToProcess)
 begin
-	insert into dbo.AccountSequences (AccountId, Sequence) values (@counter, 0)
+	insert into dbo.AccountSequences (AccountNumber, Sequence) values (@counter, 0)
 	set @counter = @counter + 1
 end
 

@@ -1,4 +1,4 @@
-﻿select	AccountId, 
+﻿select	AccountNumber, 
 		Sequence 
 from	dbo.AccountSequences with (nolock)
 where	Sequence > 0
