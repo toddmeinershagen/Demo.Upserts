@@ -13,6 +13,7 @@ namespace Demo.Upserts.Command
         public static readonly int CommandTimeoutInSeconds = GetConfigValue<int>("commandTimeoutInSeconds");
         public static readonly int DelayInSeconds = GetConfigValue<int>("delayInSeconds");
         public static readonly int NumberOfChaosPoints = GetConfigValue<int>("numberOfChaosPoints");
+        public static int MessageCount = 0;
 
         public static State Instance { get; }
         private readonly ConcurrentQueue<Message> _queue;

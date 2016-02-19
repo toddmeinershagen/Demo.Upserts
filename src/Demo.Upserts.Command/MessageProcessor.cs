@@ -20,6 +20,8 @@ namespace Demo.Upserts.Command
             DoWork();
 
             _repository.Increment(message.AccountNumber);
+            Interlocked.Increment(ref State.MessageCount);
+            Console.Write($"\r{State.MessageCount,10:N0} message(s) processed");
 
             return true;
         }

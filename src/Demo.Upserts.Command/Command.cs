@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Demo.Upserts.Command
@@ -17,11 +18,12 @@ namespace Demo.Upserts.Command
             LoadMessages(State.NumberOfMessages, State.MaxNumber);
             var elapsed = ProcessMessages(State.NumberOfMessages, State.NumberOfWorkers);
 
-            var message2 = $@"{State.NumberOfMessages:#,###} message(s) processed
-with numbers from 0 - {State.MaxNumber:#,###}
-in {elapsed.TotalSeconds:n2} second(s) with {State.NumberOfWorkers} worker(s).";
+            Console.WriteLine();
 
+            var message2 = $@"with numbers from 0 - {State.MaxNumber:#,###}
+in {elapsed.TotalSeconds:n2} second(s) with {State.NumberOfWorkers} worker(s).";
             Console.WriteLine(message2);
+
             Console.ReadLine();
         }
 
