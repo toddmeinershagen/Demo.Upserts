@@ -37,7 +37,9 @@ in {elapsed.TotalSeconds:n2} second(s) with {State.NumberOfWorkers} worker(s).";
             foreach (var count in Enumerable.Range(0, numberOfMessages))
             {
                 var randomAccountNumber = GetRandomAccountNumber(maxNumber);
-                State.Instance.Enqueue(randomAccountNumber);
+
+                var introduceChaos = State.Instance.ChaosPointsCounter++ < State.NumberOfChaosPoints;
+                State.Instance.Enqueue(randomAccountNumber, introduceChaos);
             }
         }
 
@@ -60,8 +62,12 @@ in {elapsed.TotalSeconds:n2} second(s) with {State.NumberOfWorkers} worker(s).";
         private void ProcessNextMessage()
         {
             var message = State.Instance.Dequeue();
-            var processor = new MessageProcessor(new AccountSequencesRepository());
-            processor.Process(message);
+
+            if (message != null)
+            {
+                var processor = new MessageProcessor(new AccountSequencesRepository());
+                processor.Process(message);
+            }
         }
 
         private int GetRandomAccountNumber(int maxNumber)
